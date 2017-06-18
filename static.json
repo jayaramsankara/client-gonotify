@@ -1,6 +1,6 @@
 {
     "root": ".",
     "routes": {
-    "*": "notifications.html"
+    "/**": "notifications.html"
   }
 }
