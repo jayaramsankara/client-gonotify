@@ -1,0 +1,15 @@
+{
+    "name": "Web page to receive notifications from gonotify app",
+    "repository": "https://github5.cisco.com/jayas/cl2017/tree/master/notifyapp",
+    "env": {
+        "ELM_COMPILE": "elm make src/Notify.elm --output notify.js"
+    },
+    "buildpacks": [
+        {
+            "url": "https://github.com/srid/heroku-buildpack-elm.git"
+        },
+        {
+            "url": "https://github.com/hone/heroku-buildpack-static"
+        }
+    ]
+}
