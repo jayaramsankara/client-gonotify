@@ -9162,7 +9162,7 @@ var _elm_lang$websocket$WebSocket$onSelfMsg = F3(
 	});
 _elm_lang$core$Native_Platform.effectManagers['WebSocket'] = {pkg: 'elm-lang/websocket', init: _elm_lang$websocket$WebSocket$init, onEffects: _elm_lang$websocket$WebSocket$onEffects, onSelfMsg: _elm_lang$websocket$WebSocket$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$websocket$WebSocket$cmdMap, subMap: _elm_lang$websocket$WebSocket$subMap};
 
-var _user$project$Notify$formatTime = function (time) {
+var _jayaramsankara$client_gonotify$Notify$formatTime = function (time) {
 	if (_elm_lang$core$Native_Utils.eq(time, 0)) {
 		return '';
 	} else {
@@ -9199,7 +9199,7 @@ var _user$project$Notify$formatTime = function (time) {
 								12) < 1) ? 'AM' : 'PM')))));
 	}
 };
-var _user$project$Notify$notifyMsg = F2(
+var _jayaramsankara$client_gonotify$Notify$notifyMsg = F2(
 	function (style, maybemsg) {
 		return A2(
 			_elm_lang$core$Maybe$withDefault,
@@ -9225,7 +9225,7 @@ var _user$project$Notify$notifyMsg = F2(
 								{
 									ctor: '::',
 									_0: _elm_lang$html$Html$text(
-										_user$project$Notify$formatTime(msg.time)),
+										_jayaramsankara$client_gonotify$Notify$formatTime(msg.time)),
 									_1: {ctor: '[]'}
 								}),
 							_1: {
@@ -9248,15 +9248,15 @@ var _user$project$Notify$notifyMsg = F2(
 				},
 				maybemsg));
 	});
-var _user$project$Notify$notifyView = function (model) {
+var _jayaramsankara$client_gonotify$Notify$notifyView = function (model) {
 	var notifyInactiveMsg = function (msg) {
 		return A2(
-			_user$project$Notify$notifyMsg,
+			_jayaramsankara$client_gonotify$Notify$notifyMsg,
 			'triangle-right',
 			_elm_lang$core$Maybe$Just(msg));
 	};
 	var notifyActiveMsg = function (msg) {
-		return A2(_user$project$Notify$notifyMsg, 'triangle-right-active', msg);
+		return A2(_jayaramsankara$client_gonotify$Notify$notifyMsg, 'triangle-right-active', msg);
 	};
 	return A2(
 		_elm_lang$html$Html$body,
@@ -9285,11 +9285,11 @@ var _user$project$Notify$notifyView = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Notify$Notification = F2(
+var _jayaramsankara$client_gonotify$Notify$Notification = F2(
 	function (a, b) {
 		return {message: a, time: b};
 	});
-var _user$project$Notify$notifyUpdate = F2(
+var _jayaramsankara$client_gonotify$Notify$notifyUpdate = F2(
 	function (msg, model) {
 		var _p0 = msg;
 		if (_p0.ctor === 'Notify') {
@@ -9300,7 +9300,7 @@ var _user$project$Notify$notifyUpdate = F2(
 					{
 						messages: {
 							ctor: '::',
-							_0: A2(_user$project$Notify$Notification, _p0._0, model.curTime),
+							_0: A2(_jayaramsankara$client_gonotify$Notify$Notification, _p0._0, model.curTime),
 							_1: model.messages
 						}
 					}),
@@ -9316,44 +9316,44 @@ var _user$project$Notify$notifyUpdate = F2(
 			};
 		}
 	});
-var _user$project$Notify$Model = F2(
+var _jayaramsankara$client_gonotify$Notify$Model = F2(
 	function (a, b) {
 		return {messages: a, curTime: b};
 	});
-var _user$project$Notify$initState = A2(
-	_user$project$Notify$Model,
+var _jayaramsankara$client_gonotify$Notify$initState = A2(
+	_jayaramsankara$client_gonotify$Notify$Model,
 	{ctor: '[]'},
 	0);
-var _user$project$Notify$Tick = function (a) {
+var _jayaramsankara$client_gonotify$Notify$Tick = function (a) {
 	return {ctor: 'Tick', _0: a};
 };
-var _user$project$Notify$Notify = function (a) {
+var _jayaramsankara$client_gonotify$Notify$Notify = function (a) {
 	return {ctor: 'Notify', _0: a};
 };
-var _user$project$Notify$subscriptions = function (model) {
+var _jayaramsankara$client_gonotify$Notify$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
-			_0: A2(_elm_lang$websocket$WebSocket$listen, 'ws://gonotify.herokuapp.com/ws/mlittle', _user$project$Notify$Notify),
+			_0: A2(_elm_lang$websocket$WebSocket$listen, 'ws://gonotify.herokuapp.com/ws/mlittle', _jayaramsankara$client_gonotify$Notify$Notify),
 			_1: {
 				ctor: '::',
-				_0: A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _user$project$Notify$Tick),
+				_0: A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _jayaramsankara$client_gonotify$Notify$Tick),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Notify$main = _elm_lang$html$Html$program(
+var _jayaramsankara$client_gonotify$Notify$main = _elm_lang$html$Html$program(
 	{
-		init: {ctor: '_Tuple2', _0: _user$project$Notify$initState, _1: _elm_lang$core$Platform_Cmd$none},
-		view: _user$project$Notify$notifyView,
-		update: _user$project$Notify$notifyUpdate,
-		subscriptions: _user$project$Notify$subscriptions
+		init: {ctor: '_Tuple2', _0: _jayaramsankara$client_gonotify$Notify$initState, _1: _elm_lang$core$Platform_Cmd$none},
+		view: _jayaramsankara$client_gonotify$Notify$notifyView,
+		update: _jayaramsankara$client_gonotify$Notify$notifyUpdate,
+		subscriptions: _jayaramsankara$client_gonotify$Notify$subscriptions
 	})();
 
 var Elm = {};
 Elm['Notify'] = Elm['Notify'] || {};
-if (typeof _user$project$Notify$main !== 'undefined') {
-    _user$project$Notify$main(Elm['Notify'], 'Notify', undefined);
+if (typeof _jayaramsankara$client_gonotify$Notify$main !== 'undefined') {
+    _jayaramsankara$client_gonotify$Notify$main(Elm['Notify'], 'Notify', undefined);
 }
 
 if (typeof define === "function" && define['amd'])
