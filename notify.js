@@ -9334,7 +9334,7 @@ var _jayaramsankara$client_gonotify$Notify$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
-			_0: A2(_elm_lang$websocket$WebSocket$listen, 'ws://gonotify.herokuapp.com/ws/mlittle', _jayaramsankara$client_gonotify$Notify$Notify),
+			_0: A2(_elm_lang$websocket$WebSocket$listen, 'wss://gonotify.herokuapp.com/ws/mlittle', _jayaramsankara$client_gonotify$Notify$Notify),
 			_1: {
 				ctor: '::',
 				_0: A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _jayaramsankara$client_gonotify$Notify$Tick),

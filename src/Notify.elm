@@ -49,7 +49,7 @@ notifyUpdate msg model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ listen "ws://gonotify.herokuapp.com/ws/mlittle" Notify
+        [ listen "wss://gonotify.herokuapp.com/ws/mlittle" Notify
         , every Time.second Tick
         ]
 
