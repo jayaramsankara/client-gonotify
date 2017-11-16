@@ -102,6 +102,7 @@
 .sendsection {
 	border: none;
 	outline: 3px black;
+
 }
 
 .notifysection {
@@ -110,15 +111,11 @@
 }
 
 .heading1 {
-
 	font-size: 32px;
-	background-color: #ffffff;
 	color: #000000;
 }
 
 .heading2 {
-
 	font-size: 24px;
-	background-color: #ffffff;
 	color: #000000;
 }
