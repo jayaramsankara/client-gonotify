@@ -53,7 +53,6 @@
 .send-message {
 	width: 140px;
 	height: 32px;
-	font-family: ciscosansTT;
 	font-size: 16px;
 	background-color: #0ab7d7;
 	color: #fff;
@@ -71,7 +70,6 @@
 .message-field {
 	width: 560px;
 	height: 48px;
-	font-family: ciscosansTT;
 	font-size: 16px;
 	background-color: #ffffff;
 	color: #000000;
@@ -88,7 +86,6 @@
 .recipient-field {
 	width: 140px;
 	height: 16px;
-	font-family: ciscosansTT;
 	font-size: 16px;
 	background-color: #ffffff;
 	color: #000000;
@@ -100,4 +97,28 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.sendsection {
+	border: none;
+	outline: 3px black;
+}
+
+.notifysection {
+	border: none;
+	outline: 3px black;
+}
+
+.heading1 {
+
+	font-size: 32px;
+	background-color: #ffffff;
+	color: #000000;
+}
+
+.heading2 {
+
+	font-size: 24px;
+	background-color: #ffffff;
+	color: #000000;
 }

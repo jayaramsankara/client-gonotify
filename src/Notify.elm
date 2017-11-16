@@ -169,7 +169,7 @@ notifyView model =
         notifyInactiveMsg msg =
             notifyMsg "triangle-right" (Just msg)
     in
-        div [] <| (notifyActiveMsg (List.head model.messages)) :: List.map notifyInactiveMsg ((Maybe.withDefault [] (List.tail model.messages)))
+        div [ class "notifysection" ] <| (notifyActiveMsg (List.head model.messages)) :: List.map notifyInactiveMsg ((Maybe.withDefault [] (List.tail model.messages)))
 
 
 sendView : Model -> Html Msg
@@ -181,10 +181,10 @@ userConnectedView : Model -> Html Msg
 userConnectedView model =
     body []
         [ div []
-            [ div [] [ text ("Welcome " ++ (Maybe.withDefault "" model.userInfo.userId) ++ "!") ]
-            , div []
-                [ text "Your Messages : " ]
+            [ div [ class "heading1" ] [ text ("Welcome " ++ (Maybe.withDefault "" model.userInfo.userId) ++ "!") ]
             , sendView model
+            , div [ class "heading2" ]
+                [ text "Your Messages : " ]
             , notifyView model
             ]
         ]

@@ -123,6 +123,6 @@ view model =
         actionButton cssid =
             button [ class cssid, onClick Notify ] [ text "Send" ]
     in
-        Html.div []
+        Html.div [ class "sendsection" ]
             [ Html.table [] [ inputRow [ (textInput "recipient-field" "Enter UserId" ReceipientReady), (textArea "message-field" "Enter Message" MessageReady), (actionButton "send-message"), text (responseString model.response) ] ]
             ]
