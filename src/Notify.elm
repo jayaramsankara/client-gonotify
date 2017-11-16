@@ -182,9 +182,16 @@ userConnectedView model =
     body []
         [ div []
             [ div [ class "heading1" ] [ text ("Welcome " ++ (Maybe.withDefault "" model.userInfo.userId) ++ "!") ]
+            , Html.br [] []
+            , Html.br [] []
+            , div [ class "heading2" ]
+                [ text "Send Message : " ]
             , sendView model
+            , Html.br [] []
+            , Html.br [] []
             , div [ class "heading2" ]
                 [ text "Your Messages : " ]
+            , Html.br [] []
             , notifyView model
             ]
         ]
