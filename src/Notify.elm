@@ -5,6 +5,7 @@ import Html.Attributes exposing (src, class)
 import WebSocket exposing (..)
 import Time exposing (..)
 import Date exposing (..)
+import User exposing (..)
 
 
 --model
@@ -13,6 +14,7 @@ import Date exposing (..)
 type Msg
     = Notify String
     | Tick Time
+    | UserLogin User.Msg
 
 
 type alias Notification =
@@ -24,12 +26,18 @@ type alias Notification =
 type alias Model =
     { messages : List Notification
     , curTime : Time
+    , userInfo : User.Model
     }
 
 
 initState : Model
 initState =
-    Model [] 0
+    Model [] 0 <| User.Model Nothing False False
+
+
+userPresent : Model -> Bool
+userPresent model =
+    model.userInfo.readyToConnect
 
 
 
@@ -45,13 +53,30 @@ notifyUpdate msg model =
         Tick val ->
             ( { model | curTime = val }, Cmd.none )
 
+        UserLogin userMsg ->
+            case userMsg of
+                User.UserIdReady uid ->
+                    ( { model | userInfo = User.Model (Just uid) model.userInfo.readyToConnect model.userInfo.connected }, Cmd.none )
+
+                User.ConnectReady ->
+                    ( { model | userInfo = User.Model model.userInfo.userId True model.userInfo.connected }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        [ listen "wss://gonotify.herokuapp.com/ws/mlittle" Notify
-        , every Time.second Tick
-        ]
+    let
+        userId =
+            Maybe.withDefault "" model.userInfo.userId
+    in
+        if userPresent model then
+            Sub.batch
+                [ listen ("wss://gonotify.herokuapp.com/ws/" ++ (userId)) Notify
+                , every Time.second Tick
+                ]
+        else
+            Sub.batch
+                [ every Time.second Tick
+                ]
 
 
 
@@ -102,10 +127,23 @@ notifyView model =
         notifyInactiveMsg msg =
             notifyMsg "triangle-right" (Just msg)
     in
-        body [ src "clhero.png" ]
+        body []
             [ div [] <| (notifyActiveMsg (List.head model.messages)) :: List.map notifyInactiveMsg ((Maybe.withDefault [] (List.tail model.messages))) ]
+
+
+userView : Model -> Html Msg
+userView model =
+    Html.map (\m -> UserLogin m) <| User.view model.userInfo
+
+
+appView : Model -> Html Msg
+appView model =
+    if (userPresent model) then
+        notifyView model
+    else
+        userView model
 
 
 main : Program Never Model Msg
 main =
-    Html.program { init = ( initState, Cmd.none ), view = notifyView, update = notifyUpdate, subscriptions = subscriptions }
+    Html.program { init = ( initState, Cmd.none ), view = appView, update = notifyUpdate, subscriptions = subscriptions }
