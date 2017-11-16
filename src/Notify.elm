@@ -6,6 +6,7 @@ import WebSocket exposing (..)
 import Time exposing (..)
 import Date exposing (..)
 import User exposing (..)
+import Json.Decode as Json exposing (..)
 
 
 --model
@@ -111,9 +112,37 @@ formatTime time =
                     "PM"
 
 
+type alias RawMessage =
+    { message : String
+    , sender : String
+    }
+
+
+messageDecoder : Decoder RawMessage
+messageDecoder =
+    map2 RawMessage
+        (field "message" string)
+        (field "sender" string)
+
+
 notifyMsg : String -> Maybe Notification -> Html Msg
 notifyMsg style maybemsg =
-    Maybe.withDefault (div [] []) (Maybe.map (\msg -> div [] [ div [ class "time-display" ] [ text (formatTime msg.time) ], div [ class style ] [ text msg.message ] ]) maybemsg)
+    let
+        extract : String -> ( String, String )
+        extract rawMsg =
+            Maybe.withDefault ( "", "" ) <| Maybe.map (\rm -> ( rm.message, rm.sender )) <| Result.toMaybe <| decodeString messageDecoder rawMsg
+    in
+        Maybe.withDefault (div [] [])
+            (Maybe.map
+                (\msg ->
+                    let
+                        ( message, sender ) =
+                            extract msg.message
+                    in
+                        (div [] [ div [ class "time-display" ] [ text <| (formatTime msg.time) ++ " , " ++ sender ++ " says : " ], div [ class style ] [ text message ] ])
+                )
+                maybemsg
+            )
 
 
 notifyView : Model -> Html Msg
