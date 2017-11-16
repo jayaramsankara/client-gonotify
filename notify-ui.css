@@ -49,3 +49,55 @@
 .body {
   background-color: #93B874;
 }
+
+.send-message {
+	width: 140px;
+	height: 32px;
+	font-family: ciscosansTT;
+	font-size: 16px;
+	background-color: #0ab7d7;
+	color: #fff;
+	padding: 7px;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	outline: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+}
+
+.message-field {
+	width: 560px;
+	height: 48px;
+	font-family: ciscosansTT;
+	font-size: 16px;
+	background-color: #ffffff;
+	color: #000000;
+	padding: 7px;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	outline: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.recipient-field {
+	width: 140px;
+	height: 16px;
+	font-family: ciscosansTT;
+	font-size: 16px;
+	background-color: #ffffff;
+	color: #000000;
+	padding: 7px;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	outline: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

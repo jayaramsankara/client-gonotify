@@ -6,6 +6,7 @@ import WebSocket exposing (..)
 import Time exposing (..)
 import Date exposing (..)
 import User exposing (..)
+import Send exposing (..)
 import Json.Decode as Json exposing (..)
 
 
@@ -16,6 +17,7 @@ type Msg
     = Notify String
     | Tick Time
     | UserLogin User.Msg
+    | SendInfo Send.Msg
 
 
 type alias Notification =
@@ -28,12 +30,16 @@ type alias Model =
     { messages : List Notification
     , curTime : Time
     , userInfo : User.Model
+    , notifyData : Send.Model
     }
 
 
 initState : Model
 initState =
-    Model [] 0 <| User.Model Nothing False False
+    Model []
+        0
+        (User.Model Nothing False False)
+        (Send.Model "" "" Nothing "")
 
 
 userPresent : Model -> Bool
@@ -61,6 +67,13 @@ notifyUpdate msg model =
 
                 User.ConnectReady ->
                     ( { model | userInfo = User.Model model.userInfo.userId True model.userInfo.connected }, Cmd.none )
+
+        SendInfo sendMsg ->
+            let
+                ( newSendModel, newSendMsg ) =
+                    Send.update sendMsg model.notifyData
+            in
+                ( { model | notifyData = newSendModel }, Cmd.map (\msg -> SendInfo msg) newSendMsg )
 
 
 subscriptions : Model -> Sub Msg
@@ -156,8 +169,25 @@ notifyView model =
         notifyInactiveMsg msg =
             notifyMsg "triangle-right" (Just msg)
     in
-        body []
-            [ div [] <| (notifyActiveMsg (List.head model.messages)) :: List.map notifyInactiveMsg ((Maybe.withDefault [] (List.tail model.messages))) ]
+        div [] <| (notifyActiveMsg (List.head model.messages)) :: List.map notifyInactiveMsg ((Maybe.withDefault [] (List.tail model.messages)))
+
+
+sendView : Model -> Html Msg
+sendView model =
+    Html.map (\m -> SendInfo m) <| Send.view model.notifyData
+
+
+userConnectedView : Model -> Html Msg
+userConnectedView model =
+    body []
+        [ div []
+            [ div [] [ text ("Welcome " ++ (Maybe.withDefault "" model.userInfo.userId) ++ "!") ]
+            , div []
+                [ text "Your Messages : " ]
+            , sendView model
+            , notifyView model
+            ]
+        ]
 
 
 userView : Model -> Html Msg
@@ -168,7 +198,7 @@ userView model =
 appView : Model -> Html Msg
 appView model =
     if (userPresent model) then
-        notifyView model
+        userConnectedView model
     else
         userView model
 
