@@ -54,7 +54,7 @@
 	width: 140px;
 	height: 32px;
 	font-size: 16px;
-	background-color: #bcb3a7;
+	background-color: #F78E4B;
 	color: #fff;
 	padding: 7px;
 	border: none;
@@ -76,7 +76,6 @@
 	padding: 7px;
 	border: none;
 	border-radius: 3px;
-	cursor: pointer;
 	outline: none;
 	white-space: nowrap;
 	overflow: hidden;
@@ -92,7 +91,6 @@
 	padding: 7px;
 	border: none;
 	border-radius: 3px;
-	cursor: pointer;
 	outline: none;
 	white-space: nowrap;
 	overflow: hidden;
