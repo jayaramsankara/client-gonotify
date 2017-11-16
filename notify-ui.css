@@ -50,6 +50,23 @@
   background-color: #93B874;
 }
 
+.connect {
+	width: 140px;
+	height: 32px;
+	font-size: 16px;
+	background-color: #F78E4B;
+	color: #fff;
+	padding: 7px;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	outline: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+}
+
 .send-message {
 	width: 140px;
 	height: 32px;
@@ -98,14 +115,24 @@
 }
 
 .sendsection {
-	border: none;
-	outline: 3px black;
+	border: 3px black;
+	outline: none;
 
 }
 
 .notifysection {
-	border: none;
-	outline: 3px black;
+  border: 3px black;
+	outline: none;
+}
+
+.loginsection {
+  border: 3px black;
+	outline: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -100px 0 0 -150px;
+
 }
 
 .heading1 {

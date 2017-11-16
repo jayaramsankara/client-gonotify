@@ -19,4 +19,4 @@ type alias Model =
 
 view : Model -> Html Msg
 view model =
-    div [] [ table [] [ tr [] [ td [] [ input [ placeholder "Enter User Name", onInput UserIdReady ] [] ], td [] [ button [ onClick ConnectReady ] [ text "Connect" ] ] ] ] ]
+    div [ class "loginsection" ] [ table [] [ tr [] [ td [] [ input [ placeholder "Enter User Name", onInput UserIdReady, class "recipient-field" ] [] ], td [] [ button [ onClick ConnectReady, class "connect" ] [ text "Connect" ] ] ] ] ]
