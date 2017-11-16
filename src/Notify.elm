@@ -61,12 +61,19 @@ notifyUpdate msg model =
             ( { model | curTime = val }, Cmd.none )
 
         UserLogin userMsg ->
-            case userMsg of
-                User.UserIdReady uid ->
-                    ( { model | userInfo = User.Model (Just uid) model.userInfo.readyToConnect model.userInfo.connected }, Cmd.none )
+            let
+                sendModel =
+                    model.notifyData
 
-                User.ConnectReady ->
-                    ( { model | userInfo = User.Model model.userInfo.userId True model.userInfo.connected }, Cmd.none )
+                userModel =
+                    model.userInfo
+            in
+                case userMsg of
+                    User.UserIdReady uid ->
+                        ( { model | userInfo = { userModel | userId = Just uid }, notifyData = { sendModel | sender = uid } }, Cmd.none )
+
+                    User.ConnectReady ->
+                        ( { model | userInfo = { userModel | readyToConnect = True } }, Cmd.none )
 
         SendInfo sendMsg ->
             let
