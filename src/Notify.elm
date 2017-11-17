@@ -6,7 +6,6 @@ import WebSocket exposing (..)
 import Time exposing (..)
 import Date exposing (..)
 import User exposing (..)
-import Send exposing (..)
 import Json.Decode as Json exposing (..)
 
 
@@ -17,7 +16,6 @@ type Msg
     = Notify String
     | Tick Time
     | UserLogin User.Msg
-    | SendInfo Send.Msg
 
 
 type alias Notification =
@@ -30,7 +28,6 @@ type alias Model =
     { messages : List Notification
     , curTime : Time
     , userInfo : User.Model
-    , notifyData : Send.Model
     }
 
 
@@ -39,7 +36,6 @@ initState =
     Model []
         0
         (User.Model Nothing False False)
-        (Send.Model "" "" Nothing "")
 
 
 userPresent : Model -> Bool
@@ -62,25 +58,15 @@ notifyUpdate msg model =
 
         UserLogin userMsg ->
             let
-                sendModel =
-                    model.notifyData
-
                 userModel =
                     model.userInfo
             in
                 case userMsg of
                     User.UserIdReady uid ->
-                        ( { model | userInfo = { userModel | userId = Just uid }, notifyData = { sendModel | sender = uid } }, Cmd.none )
+                        ( { model | userInfo = { userModel | userId = Just uid } }, Cmd.none )
 
                     User.ConnectReady ->
                         ( { model | userInfo = { userModel | readyToConnect = True } }, Cmd.none )
-
-        SendInfo sendMsg ->
-            let
-                ( newSendModel, newSendMsg ) =
-                    Send.update sendMsg model.notifyData
-            in
-                ( { model | notifyData = newSendModel }, Cmd.map (\msg -> SendInfo msg) newSendMsg )
 
 
 subscriptions : Model -> Sub Msg
@@ -179,21 +165,11 @@ notifyView model =
         div [ class "notifysection" ] <| (notifyActiveMsg (List.head model.messages)) :: List.map notifyInactiveMsg ((Maybe.withDefault [] (List.tail model.messages)))
 
 
-sendView : Model -> Html Msg
-sendView model =
-    Html.map (\m -> SendInfo m) <| Send.view model.notifyData
-
-
 userConnectedView : Model -> Html Msg
 userConnectedView model =
     body []
         [ div []
             [ div [ class "heading1" ] [ text ("Welcome " ++ (Maybe.withDefault "" model.userInfo.userId) ++ "!") ]
-            , Html.br [] []
-            , Html.br [] []
-            , div [ class "heading2" ]
-                [ text "Send Message : " ]
-            , sendView model
             , Html.br [] []
             , Html.br [] []
             , div [ class "heading2" ]
