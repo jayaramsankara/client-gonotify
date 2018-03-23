@@ -8627,6 +8627,482 @@ var _elm_lang$html$Html_Attributes$classList = function (list) {
 };
 var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
 
+var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _elm_lang$html$Html_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$bool);
+var _elm_lang$html$Html_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
+var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
+var _elm_lang$html$Html_Events$onFocus = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'focus',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onBlur = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'blur',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
+	_elm_lang$html$Html_Events$defaultOptions,
+	{preventDefault: true});
+var _elm_lang$html$Html_Events$onSubmit = function (msg) {
+	return A3(
+		_elm_lang$html$Html_Events$onWithOptions,
+		'submit',
+		_elm_lang$html$Html_Events$onSubmitOptions,
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onCheck = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'change',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
+};
+var _elm_lang$html$Html_Events$onInput = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'input',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
+};
+var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseout',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseover',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseleave',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseenter',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseup',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mousedown',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'dblclick',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'click',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});
+
+var _elm_lang$http$Native_Http = function() {
+
+
+// ENCODING AND DECODING
+
+function encodeUri(string)
+{
+	return encodeURIComponent(string);
+}
+
+function decodeUri(string)
+{
+	try
+	{
+		return _elm_lang$core$Maybe$Just(decodeURIComponent(string));
+	}
+	catch(e)
+	{
+		return _elm_lang$core$Maybe$Nothing;
+	}
+}
+
+
+// SEND REQUEST
+
+function toTask(request, maybeProgress)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		var xhr = new XMLHttpRequest();
+
+		configureProgress(xhr, maybeProgress);
+
+		xhr.addEventListener('error', function() {
+			callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'NetworkError' }));
+		});
+		xhr.addEventListener('timeout', function() {
+			callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'Timeout' }));
+		});
+		xhr.addEventListener('load', function() {
+			callback(handleResponse(xhr, request.expect.responseToResult));
+		});
+
+		try
+		{
+			xhr.open(request.method, request.url, true);
+		}
+		catch (e)
+		{
+			return callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'BadUrl', _0: request.url }));
+		}
+
+		configureRequest(xhr, request);
+		send(xhr, request.body);
+
+		return function() { xhr.abort(); };
+	});
+}
+
+function configureProgress(xhr, maybeProgress)
+{
+	if (maybeProgress.ctor === 'Nothing')
+	{
+		return;
+	}
+
+	xhr.addEventListener('progress', function(event) {
+		if (!event.lengthComputable)
+		{
+			return;
+		}
+		_elm_lang$core$Native_Scheduler.rawSpawn(maybeProgress._0({
+			bytes: event.loaded,
+			bytesExpected: event.total
+		}));
+	});
+}
+
+function configureRequest(xhr, request)
+{
+	function setHeader(pair)
+	{
+		xhr.setRequestHeader(pair._0, pair._1);
+	}
+
+	A2(_elm_lang$core$List$map, setHeader, request.headers);
+	xhr.responseType = request.expect.responseType;
+	xhr.withCredentials = request.withCredentials;
+
+	if (request.timeout.ctor === 'Just')
+	{
+		xhr.timeout = request.timeout._0;
+	}
+}
+
+function send(xhr, body)
+{
+	switch (body.ctor)
+	{
+		case 'EmptyBody':
+			xhr.send();
+			return;
+
+		case 'StringBody':
+			xhr.setRequestHeader('Content-Type', body._0);
+			xhr.send(body._1);
+			return;
+
+		case 'FormDataBody':
+			xhr.send(body._0);
+			return;
+	}
+}
+
+
+// RESPONSES
+
+function handleResponse(xhr, responseToResult)
+{
+	var response = toResponse(xhr);
+
+	if (xhr.status < 200 || 300 <= xhr.status)
+	{
+		response.body = xhr.responseText;
+		return _elm_lang$core$Native_Scheduler.fail({
+			ctor: 'BadStatus',
+			_0: response
+		});
+	}
+
+	var result = responseToResult(response);
+
+	if (result.ctor === 'Ok')
+	{
+		return _elm_lang$core$Native_Scheduler.succeed(result._0);
+	}
+	else
+	{
+		response.body = xhr.responseText;
+		return _elm_lang$core$Native_Scheduler.fail({
+			ctor: 'BadPayload',
+			_0: result._0,
+			_1: response
+		});
+	}
+}
+
+function toResponse(xhr)
+{
+	return {
+		status: { code: xhr.status, message: xhr.statusText },
+		headers: parseHeaders(xhr.getAllResponseHeaders()),
+		url: xhr.responseURL,
+		body: xhr.response
+	};
+}
+
+function parseHeaders(rawHeaders)
+{
+	var headers = _elm_lang$core$Dict$empty;
+
+	if (!rawHeaders)
+	{
+		return headers;
+	}
+
+	var headerPairs = rawHeaders.split('\u000d\u000a');
+	for (var i = headerPairs.length; i--; )
+	{
+		var headerPair = headerPairs[i];
+		var index = headerPair.indexOf('\u003a\u0020');
+		if (index > 0)
+		{
+			var key = headerPair.substring(0, index);
+			var value = headerPair.substring(index + 2);
+
+			headers = A3(_elm_lang$core$Dict$update, key, function(oldValue) {
+				if (oldValue.ctor === 'Just')
+				{
+					return _elm_lang$core$Maybe$Just(value + ', ' + oldValue._0);
+				}
+				return _elm_lang$core$Maybe$Just(value);
+			}, headers);
+		}
+	}
+
+	return headers;
+}
+
+
+// EXPECTORS
+
+function expectStringResponse(responseToResult)
+{
+	return {
+		responseType: 'text',
+		responseToResult: responseToResult
+	};
+}
+
+function mapExpect(func, expect)
+{
+	return {
+		responseType: expect.responseType,
+		responseToResult: function(response) {
+			var convertedResponse = expect.responseToResult(response);
+			return A2(_elm_lang$core$Result$map, func, convertedResponse);
+		}
+	};
+}
+
+
+// BODY
+
+function multipart(parts)
+{
+	var formData = new FormData();
+
+	while (parts.ctor !== '[]')
+	{
+		var part = parts._0;
+		formData.append(part._0, part._1);
+		parts = parts._1;
+	}
+
+	return { ctor: 'FormDataBody', _0: formData };
+}
+
+return {
+	toTask: F2(toTask),
+	expectStringResponse: expectStringResponse,
+	mapExpect: F2(mapExpect),
+	multipart: multipart,
+	encodeUri: encodeUri,
+	decodeUri: decodeUri
+};
+
+}();
+
+var _elm_lang$http$Http_Internal$map = F2(
+	function (func, request) {
+		return _elm_lang$core$Native_Utils.update(
+			request,
+			{
+				expect: A2(_elm_lang$http$Native_Http.mapExpect, func, request.expect)
+			});
+	});
+var _elm_lang$http$Http_Internal$RawRequest = F7(
+	function (a, b, c, d, e, f, g) {
+		return {method: a, headers: b, url: c, body: d, expect: e, timeout: f, withCredentials: g};
+	});
+var _elm_lang$http$Http_Internal$Request = function (a) {
+	return {ctor: 'Request', _0: a};
+};
+var _elm_lang$http$Http_Internal$Expect = {ctor: 'Expect'};
+var _elm_lang$http$Http_Internal$FormDataBody = {ctor: 'FormDataBody'};
+var _elm_lang$http$Http_Internal$StringBody = F2(
+	function (a, b) {
+		return {ctor: 'StringBody', _0: a, _1: b};
+	});
+var _elm_lang$http$Http_Internal$EmptyBody = {ctor: 'EmptyBody'};
+var _elm_lang$http$Http_Internal$Header = F2(
+	function (a, b) {
+		return {ctor: 'Header', _0: a, _1: b};
+	});
+
+var _elm_lang$http$Http$decodeUri = _elm_lang$http$Native_Http.decodeUri;
+var _elm_lang$http$Http$encodeUri = _elm_lang$http$Native_Http.encodeUri;
+var _elm_lang$http$Http$expectStringResponse = _elm_lang$http$Native_Http.expectStringResponse;
+var _elm_lang$http$Http$expectJson = function (decoder) {
+	return _elm_lang$http$Http$expectStringResponse(
+		function (response) {
+			return A2(_elm_lang$core$Json_Decode$decodeString, decoder, response.body);
+		});
+};
+var _elm_lang$http$Http$expectString = _elm_lang$http$Http$expectStringResponse(
+	function (response) {
+		return _elm_lang$core$Result$Ok(response.body);
+	});
+var _elm_lang$http$Http$multipartBody = _elm_lang$http$Native_Http.multipart;
+var _elm_lang$http$Http$stringBody = _elm_lang$http$Http_Internal$StringBody;
+var _elm_lang$http$Http$jsonBody = function (value) {
+	return A2(
+		_elm_lang$http$Http_Internal$StringBody,
+		'application/json',
+		A2(_elm_lang$core$Json_Encode$encode, 0, value));
+};
+var _elm_lang$http$Http$emptyBody = _elm_lang$http$Http_Internal$EmptyBody;
+var _elm_lang$http$Http$header = _elm_lang$http$Http_Internal$Header;
+var _elm_lang$http$Http$request = _elm_lang$http$Http_Internal$Request;
+var _elm_lang$http$Http$post = F3(
+	function (url, body, decoder) {
+		return _elm_lang$http$Http$request(
+			{
+				method: 'POST',
+				headers: {ctor: '[]'},
+				url: url,
+				body: body,
+				expect: _elm_lang$http$Http$expectJson(decoder),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
+	});
+var _elm_lang$http$Http$get = F2(
+	function (url, decoder) {
+		return _elm_lang$http$Http$request(
+			{
+				method: 'GET',
+				headers: {ctor: '[]'},
+				url: url,
+				body: _elm_lang$http$Http$emptyBody,
+				expect: _elm_lang$http$Http$expectJson(decoder),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
+	});
+var _elm_lang$http$Http$getString = function (url) {
+	return _elm_lang$http$Http$request(
+		{
+			method: 'GET',
+			headers: {ctor: '[]'},
+			url: url,
+			body: _elm_lang$http$Http$emptyBody,
+			expect: _elm_lang$http$Http$expectString,
+			timeout: _elm_lang$core$Maybe$Nothing,
+			withCredentials: false
+		});
+};
+var _elm_lang$http$Http$toTask = function (_p0) {
+	var _p1 = _p0;
+	return A2(_elm_lang$http$Native_Http.toTask, _p1._0, _elm_lang$core$Maybe$Nothing);
+};
+var _elm_lang$http$Http$send = F2(
+	function (resultToMessage, request) {
+		return A2(
+			_elm_lang$core$Task$attempt,
+			resultToMessage,
+			_elm_lang$http$Http$toTask(request));
+	});
+var _elm_lang$http$Http$Response = F4(
+	function (a, b, c, d) {
+		return {url: a, status: b, headers: c, body: d};
+	});
+var _elm_lang$http$Http$BadPayload = F2(
+	function (a, b) {
+		return {ctor: 'BadPayload', _0: a, _1: b};
+	});
+var _elm_lang$http$Http$BadStatus = function (a) {
+	return {ctor: 'BadStatus', _0: a};
+};
+var _elm_lang$http$Http$NetworkError = {ctor: 'NetworkError'};
+var _elm_lang$http$Http$Timeout = {ctor: 'Timeout'};
+var _elm_lang$http$Http$BadUrl = function (a) {
+	return {ctor: 'BadUrl', _0: a};
+};
+var _elm_lang$http$Http$StringPart = F2(
+	function (a, b) {
+		return {ctor: 'StringPart', _0: a, _1: b};
+	});
+var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
+
 var _elm_lang$websocket$Native_WebSocket = function() {
 
 function open(url, settings)
@@ -9162,6 +9638,363 @@ var _elm_lang$websocket$WebSocket$onSelfMsg = F3(
 	});
 _elm_lang$core$Native_Platform.effectManagers['WebSocket'] = {pkg: 'elm-lang/websocket', init: _elm_lang$websocket$WebSocket$init, onEffects: _elm_lang$websocket$WebSocket$onEffects, onSelfMsg: _elm_lang$websocket$WebSocket$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$websocket$WebSocket$cmdMap, subMap: _elm_lang$websocket$WebSocket$subMap};
 
+var _jayaramsankara$client_gonotify$User$Model = F3(
+	function (a, b, c) {
+		return {userId: a, readyToConnect: b, connected: c};
+	});
+var _jayaramsankara$client_gonotify$User$ConnectReady = {ctor: 'ConnectReady'};
+var _jayaramsankara$client_gonotify$User$UserIdReady = function (a) {
+	return {ctor: 'UserIdReady', _0: a};
+};
+var _jayaramsankara$client_gonotify$User$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('loginsection'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$table,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$tr,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$td,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$input,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$placeholder('Enter User Name'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onInput(_jayaramsankara$client_gonotify$User$UserIdReady),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('recipient-field'),
+													_1: {ctor: '[]'}
+												}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$td,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$button,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(_jayaramsankara$client_gonotify$User$ConnectReady),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('connect'),
+													_1: {ctor: '[]'}
+												}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Connect'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+
+var _jayaramsankara$client_gonotify$Send$httpErrToString = function (err) {
+	var _p0 = err;
+	switch (_p0.ctor) {
+		case 'Timeout':
+			return 'Timeout Error';
+		case 'NetworkError':
+			return 'Network Error';
+		case 'BadStatus':
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				'Bad Status Code in Response : ',
+				_elm_lang$core$Basics$toString(_p0._0.status.code));
+		case 'BadPayload':
+			return A2(_elm_lang$core$Basics_ops['++'], 'Bad Response Payload : ', _p0._0);
+		default:
+			return 'Invalid URL';
+	}
+};
+var _jayaramsankara$client_gonotify$Send$notifyUrlBase = 'https://gonotify.herokuapp.com/notify/';
+var _jayaramsankara$client_gonotify$Send$Model = F4(
+	function (a, b, c, d) {
+		return {recipient: a, message: b, response: c, sender: d};
+	});
+var _jayaramsankara$client_gonotify$Send$NotifyResponseBody = F2(
+	function (a, b) {
+		return {status: a, clientId: b};
+	});
+var _jayaramsankara$client_gonotify$Send$notifyResponseDecoder = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_jayaramsankara$client_gonotify$Send$NotifyResponseBody,
+	A2(_elm_lang$core$Json_Decode$field, 'status', _elm_lang$core$Json_Decode$bool),
+	A2(_elm_lang$core$Json_Decode$field, 'clientId', _elm_lang$core$Json_Decode$string));
+var _jayaramsankara$client_gonotify$Send$ReceipientReady = function (a) {
+	return {ctor: 'ReceipientReady', _0: a};
+};
+var _jayaramsankara$client_gonotify$Send$MessageReady = function (a) {
+	return {ctor: 'MessageReady', _0: a};
+};
+var _jayaramsankara$client_gonotify$Send$NotifyResponse = function (a) {
+	return {ctor: 'NotifyResponse', _0: a};
+};
+var _jayaramsankara$client_gonotify$Send$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'Notify':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							response: _elm_lang$core$Maybe$Just(
+								A2(_elm_lang$core$Basics_ops['++'], 'Notifying..', model.recipient))
+						}),
+					_1: A2(
+						_elm_lang$http$Http$send,
+						_jayaramsankara$client_gonotify$Send$NotifyResponse,
+						A3(
+							_elm_lang$http$Http$post,
+							A2(_elm_lang$core$Basics_ops['++'], _jayaramsankara$client_gonotify$Send$notifyUrlBase, model.recipient),
+							_elm_lang$http$Http$jsonBody(
+								_elm_lang$core$Json_Encode$object(
+									{
+										ctor: '::',
+										_0: {
+											ctor: '_Tuple2',
+											_0: 'message',
+											_1: _elm_lang$core$Json_Encode$string(
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													'{\"message\" : \"',
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														model.message,
+														A2(
+															_elm_lang$core$Basics_ops['++'],
+															'\",\"sender\" : \"',
+															A2(_elm_lang$core$Basics_ops['++'], model.sender, '\"}')))))
+										},
+										_1: {ctor: '[]'}
+									})),
+							_jayaramsankara$client_gonotify$Send$notifyResponseDecoder))
+				};
+			case 'NotifyResponse':
+				if (_p1._0.ctor === 'Ok') {
+					var _p2 = _p1._0._0;
+					var newModel = F2(
+						function (message, model) {
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									response: _elm_lang$core$Maybe$Just(message)
+								});
+						});
+					return _p2.status ? {
+						ctor: '_Tuple2',
+						_0: A2(newModel, 'Message Sent.', model),
+						_1: _elm_lang$core$Platform_Cmd$none
+					} : {
+						ctor: '_Tuple2',
+						_0: A2(
+							newModel,
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'Message Not Delivered. ',
+								A2(_elm_lang$core$Basics_ops['++'], _p2.clientId, ' is not connected.')),
+							model),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								response: _elm_lang$core$Maybe$Just(
+									_jayaramsankara$client_gonotify$Send$httpErrToString(_p1._0._0))
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			case 'MessageReady':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{message: _p1._0, response: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{recipient: _p1._0, response: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _jayaramsankara$client_gonotify$Send$Notify = {ctor: 'Notify'};
+var _jayaramsankara$client_gonotify$Send$view = function (model) {
+	var actionButton = function (cssid) {
+		return A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(cssid),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(_jayaramsankara$client_gonotify$Send$Notify),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Send'),
+				_1: {ctor: '[]'}
+			});
+	};
+	var textArea = F3(
+		function (cssid, ph, msg) {
+			return A2(
+				_elm_lang$html$Html$textarea,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class(cssid),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$placeholder(ph),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onInput(msg),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{ctor: '[]'});
+		});
+	var textInput = F3(
+		function (cssid, ph, msg) {
+			return A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class(cssid),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$placeholder(ph),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onInput(msg),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{ctor: '[]'});
+		});
+	var inputRow = function (components) {
+		return A2(
+			_elm_lang$html$Html$tr,
+			{ctor: '[]'},
+			A2(
+				_elm_lang$core$List$map,
+				function (comp) {
+					return A2(
+						_elm_lang$html$Html$td,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: comp,
+							_1: {ctor: '[]'}
+						});
+				},
+				components));
+	};
+	var responseString = function (resp) {
+		return A2(_elm_lang$core$Maybe$withDefault, '', resp);
+	};
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('sendsection'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$table,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: inputRow(
+						{
+							ctor: '::',
+							_0: A3(textInput, 'recipient-field', 'Enter UserId', _jayaramsankara$client_gonotify$Send$ReceipientReady),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: inputRow(
+							{
+								ctor: '::',
+								_0: A3(textArea, 'message-field', 'Enter Message', _jayaramsankara$client_gonotify$Send$MessageReady),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: inputRow(
+								{
+									ctor: '::',
+									_0: actionButton('send-message'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: inputRow(
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											responseString(model.response)),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+
 var _jayaramsankara$client_gonotify$Notify$formatTime = function (time) {
 	if (_elm_lang$core$Native_Utils.eq(time, 0)) {
 		return '';
@@ -9199,8 +10032,46 @@ var _jayaramsankara$client_gonotify$Notify$formatTime = function (time) {
 								12) < 1) ? 'AM' : 'PM')))));
 	}
 };
+var _jayaramsankara$client_gonotify$Notify$userPresent = function (model) {
+	return model.userInfo.readyToConnect;
+};
+var _jayaramsankara$client_gonotify$Notify$Notification = F2(
+	function (a, b) {
+		return {message: a, time: b};
+	});
+var _jayaramsankara$client_gonotify$Notify$Model = F4(
+	function (a, b, c, d) {
+		return {messages: a, curTime: b, userInfo: c, notifyData: d};
+	});
+var _jayaramsankara$client_gonotify$Notify$initState = A4(
+	_jayaramsankara$client_gonotify$Notify$Model,
+	{ctor: '[]'},
+	0,
+	A3(_jayaramsankara$client_gonotify$User$Model, _elm_lang$core$Maybe$Nothing, false, false),
+	A4(_jayaramsankara$client_gonotify$Send$Model, '', '', _elm_lang$core$Maybe$Nothing, ''));
+var _jayaramsankara$client_gonotify$Notify$RawMessage = F2(
+	function (a, b) {
+		return {message: a, sender: b};
+	});
+var _jayaramsankara$client_gonotify$Notify$messageDecoder = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_jayaramsankara$client_gonotify$Notify$RawMessage,
+	A2(_elm_lang$core$Json_Decode$field, 'message', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'sender', _elm_lang$core$Json_Decode$string));
 var _jayaramsankara$client_gonotify$Notify$notifyMsg = F2(
 	function (style, maybemsg) {
+		var extract = function (rawMsg) {
+			return A2(
+				_elm_lang$core$Maybe$withDefault,
+				{ctor: '_Tuple2', _0: '', _1: ''},
+				A2(
+					_elm_lang$core$Maybe$map,
+					function (rm) {
+						return {ctor: '_Tuple2', _0: rm.message, _1: rm.sender};
+					},
+					_elm_lang$core$Result$toMaybe(
+						A2(_elm_lang$core$Json_Decode$decodeString, _jayaramsankara$client_gonotify$Notify$messageDecoder, rawMsg))));
+		};
 		return A2(
 			_elm_lang$core$Maybe$withDefault,
 			A2(
@@ -9210,6 +10081,9 @@ var _jayaramsankara$client_gonotify$Notify$notifyMsg = F2(
 			A2(
 				_elm_lang$core$Maybe$map,
 				function (msg) {
+					var _p0 = extract(msg.message);
+					var message = _p0._0;
+					var sender = _p0._1;
 					return A2(
 						_elm_lang$html$Html$div,
 						{ctor: '[]'},
@@ -9225,7 +10099,13 @@ var _jayaramsankara$client_gonotify$Notify$notifyMsg = F2(
 								{
 									ctor: '::',
 									_0: _elm_lang$html$Html$text(
-										_jayaramsankara$client_gonotify$Notify$formatTime(msg.time)),
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											_jayaramsankara$client_gonotify$Notify$formatTime(msg.time),
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												' , ',
+												A2(_elm_lang$core$Basics_ops['++'], sender, ' says : ')))),
 									_1: {ctor: '[]'}
 								}),
 							_1: {
@@ -9239,7 +10119,7 @@ var _jayaramsankara$client_gonotify$Notify$notifyMsg = F2(
 									},
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html$text(msg.message),
+										_0: _elm_lang$html$Html$text(message),
 										_1: {ctor: '[]'}
 									}),
 								_1: {ctor: '[]'}
@@ -9259,12 +10139,119 @@ var _jayaramsankara$client_gonotify$Notify$notifyView = function (model) {
 		return A2(_jayaramsankara$client_gonotify$Notify$notifyMsg, 'triangle-right-active', msg);
 	};
 	return A2(
-		_elm_lang$html$Html$body,
+		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$src('clhero.png'),
+			_0: _elm_lang$html$Html_Attributes$class('notifysection'),
 			_1: {ctor: '[]'}
 		},
+		{
+			ctor: '::',
+			_0: notifyActiveMsg(
+				_elm_lang$core$List$head(model.messages)),
+			_1: A2(
+				_elm_lang$core$List$map,
+				notifyInactiveMsg,
+				A2(
+					_elm_lang$core$Maybe$withDefault,
+					{ctor: '[]'},
+					_elm_lang$core$List$tail(model.messages)))
+		});
+};
+var _jayaramsankara$client_gonotify$Notify$SendInfo = function (a) {
+	return {ctor: 'SendInfo', _0: a};
+};
+var _jayaramsankara$client_gonotify$Notify$notifyUpdate = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'Notify':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							messages: {
+								ctor: '::',
+								_0: A2(_jayaramsankara$client_gonotify$Notify$Notification, _p1._0, model.curTime),
+								_1: model.messages
+							}
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Tick':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{curTime: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'UserLogin':
+				var userModel = model.userInfo;
+				var sendModel = model.notifyData;
+				var _p2 = _p1._0;
+				if (_p2.ctor === 'UserIdReady') {
+					var _p3 = _p2._0;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								userInfo: _elm_lang$core$Native_Utils.update(
+									userModel,
+									{
+										userId: _elm_lang$core$Maybe$Just(_p3)
+									}),
+								notifyData: _elm_lang$core$Native_Utils.update(
+									sendModel,
+									{sender: _p3})
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								userInfo: _elm_lang$core$Native_Utils.update(
+									userModel,
+									{readyToConnect: true})
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			default:
+				var _p4 = A2(_jayaramsankara$client_gonotify$Send$update, _p1._0, model.notifyData);
+				var newSendModel = _p4._0;
+				var newSendMsg = _p4._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{notifyData: newSendModel}),
+					_1: A2(
+						_elm_lang$core$Platform_Cmd$map,
+						function (msg) {
+							return _jayaramsankara$client_gonotify$Notify$SendInfo(msg);
+						},
+						newSendMsg)
+				};
+		}
+	});
+var _jayaramsankara$client_gonotify$Notify$sendView = function (model) {
+	return A2(
+		_elm_lang$html$Html$map,
+		function (m) {
+			return _jayaramsankara$client_gonotify$Notify$SendInfo(m);
+		},
+		_jayaramsankara$client_gonotify$Send$view(model.notifyData));
+};
+var _jayaramsankara$client_gonotify$Notify$userConnectedView = function (model) {
+	return A2(
+		_elm_lang$html$Html$body,
+		{ctor: '[]'},
 		{
 			ctor: '::',
 			_0: A2(
@@ -9272,58 +10259,117 @@ var _jayaramsankara$client_gonotify$Notify$notifyView = function (model) {
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: notifyActiveMsg(
-						_elm_lang$core$List$head(model.messages)),
-					_1: A2(
-						_elm_lang$core$List$map,
-						notifyInactiveMsg,
-						A2(
-							_elm_lang$core$Maybe$withDefault,
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('heading1'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'Welcome ',
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										A2(_elm_lang$core$Maybe$withDefault, '', model.userInfo.userId),
+										'!'))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$br,
 							{ctor: '[]'},
-							_elm_lang$core$List$tail(model.messages)))
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$br,
+								{ctor: '[]'},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('heading2'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Send Message : '),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _jayaramsankara$client_gonotify$Notify$sendView(model),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$br,
+											{ctor: '[]'},
+											{ctor: '[]'}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$br,
+												{ctor: '[]'},
+												{ctor: '[]'}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$div,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('heading2'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Your Messages : '),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$br,
+														{ctor: '[]'},
+														{ctor: '[]'}),
+													_1: {
+														ctor: '::',
+														_0: _jayaramsankara$client_gonotify$Notify$notifyView(model),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 				}),
 			_1: {ctor: '[]'}
 		});
 };
-var _jayaramsankara$client_gonotify$Notify$Notification = F2(
-	function (a, b) {
-		return {message: a, time: b};
-	});
-var _jayaramsankara$client_gonotify$Notify$notifyUpdate = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'Notify') {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						messages: {
-							ctor: '::',
-							_0: A2(_jayaramsankara$client_gonotify$Notify$Notification, _p0._0, model.curTime),
-							_1: model.messages
-						}
-					}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		} else {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{curTime: _p0._0}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		}
-	});
-var _jayaramsankara$client_gonotify$Notify$Model = F2(
-	function (a, b) {
-		return {messages: a, curTime: b};
-	});
-var _jayaramsankara$client_gonotify$Notify$initState = A2(
-	_jayaramsankara$client_gonotify$Notify$Model,
-	{ctor: '[]'},
-	0);
+var _jayaramsankara$client_gonotify$Notify$UserLogin = function (a) {
+	return {ctor: 'UserLogin', _0: a};
+};
+var _jayaramsankara$client_gonotify$Notify$userView = function (model) {
+	return A2(
+		_elm_lang$html$Html$map,
+		function (m) {
+			return _jayaramsankara$client_gonotify$Notify$UserLogin(m);
+		},
+		_jayaramsankara$client_gonotify$User$view(model.userInfo));
+};
+var _jayaramsankara$client_gonotify$Notify$appView = function (model) {
+	return _jayaramsankara$client_gonotify$Notify$userPresent(model) ? _jayaramsankara$client_gonotify$Notify$userConnectedView(model) : _jayaramsankara$client_gonotify$Notify$userView(model);
+};
 var _jayaramsankara$client_gonotify$Notify$Tick = function (a) {
 	return {ctor: 'Tick', _0: a};
 };
@@ -9331,21 +10377,30 @@ var _jayaramsankara$client_gonotify$Notify$Notify = function (a) {
 	return {ctor: 'Notify', _0: a};
 };
 var _jayaramsankara$client_gonotify$Notify$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$batch(
+	var userId = A2(_elm_lang$core$Maybe$withDefault, '', model.userInfo.userId);
+	return _jayaramsankara$client_gonotify$Notify$userPresent(model) ? _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
-			_0: A2(_elm_lang$websocket$WebSocket$listen, 'wss://gonotify.herokuapp.com/ws/mlittle', _jayaramsankara$client_gonotify$Notify$Notify),
+			_0: A2(
+				_elm_lang$websocket$WebSocket$listen,
+				A2(_elm_lang$core$Basics_ops['++'], 'wss://gonotify.herokuapp.com/ws/', userId),
+				_jayaramsankara$client_gonotify$Notify$Notify),
 			_1: {
 				ctor: '::',
 				_0: A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _jayaramsankara$client_gonotify$Notify$Tick),
 				_1: {ctor: '[]'}
 			}
+		}) : _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _jayaramsankara$client_gonotify$Notify$Tick),
+			_1: {ctor: '[]'}
 		});
 };
 var _jayaramsankara$client_gonotify$Notify$main = _elm_lang$html$Html$program(
 	{
 		init: {ctor: '_Tuple2', _0: _jayaramsankara$client_gonotify$Notify$initState, _1: _elm_lang$core$Platform_Cmd$none},
-		view: _jayaramsankara$client_gonotify$Notify$notifyView,
+		view: _jayaramsankara$client_gonotify$Notify$appView,
 		update: _jayaramsankara$client_gonotify$Notify$notifyUpdate,
 		subscriptions: _jayaramsankara$client_gonotify$Notify$subscriptions
 	})();
